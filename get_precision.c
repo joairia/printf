@@ -2,40 +2,29 @@
 
 /**
  * get_precision - Calculates the precision for printing
- * @format: Formatted string in which to print the arguments
- * @i: List of arguments to be printed.
- * @list: list of arguments.
+ * @p: format
+ * @params: argu structure
+ * @a: argum
  *
- * Return: Precision.
+ * Return: pointer
  */
-int get_precision(const char *format, int *i, va_list list)
+char *get_precision(char *p, params_t *params, va_list a)
 {
-	int curr_i = *i + 1;
-	int precision = -1;
+	int d = 0;
 
-	if (format[curr_i] != '.')
-		return (precision);
-
-	precision = 0;
-
-	for (curr_i += 1; format[curr_i] != '\0'; curr_i++)
+	if (*p != '.')
+		return (p);
+	p++;
+	if (*p == '*')
 	{
-		if (is_digit(format[curr_i]))
-		{
-			precision *= 10;
-			precision += format[curr_i] - '0';
-		}
-		else if (format[curr_i] == '*')
-		{
-			curr_i++;
-			precision = va_arg(list, int);
-			break;
-		}
-		else
-			break;
+		d = va_arg(a, int);
+		p++;
 	}
-
-	*i = curr_i - 1;
-
-	return (precision);
+	else
+	{
+		while (is_digit(*p))
+			d = d * 10 + (*p++ - '0');
+	}
+	params->precision = d;
+	return (p);
 }
